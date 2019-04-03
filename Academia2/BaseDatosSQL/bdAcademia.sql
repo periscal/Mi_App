@@ -1,11 +1,11 @@
-# Creación de la base de datos
+--# Creación de la base de datos
 create database academia;
 use academia;
 
-# Creación de las tablas de datos
+--# Creación de las tablas de datos
 create table persona (
-	persona_ID		int 		not null AUTO_INCREMENT , 	# Cambiar varchar por samllInt
-	condicion		tinyint,						# alumno =0; exalumno=1; familiar =2; profesor=3
+	persona_ID		int 		not null AUTO_INCREMENT , 	--# Cambiar varchar por samllInt
+	condicion		tinyint,						--# alumno =0; exalumno=1; familiar =2; profesor=3
 	nombre_pers		varchar(20),
 	apellido1		varchar(20),
 	apellido2		varchar(20),
@@ -44,8 +44,8 @@ create table aula (
 );
 
 create table sesion (
-	sesion_ID		int not 	null AUTO_INCREMENT,# Cambiar varchar por samllInt
-	horaInicio		time, # formato [hh:mm:ss].El argumento es la parte fraccionaria de los segundos
+	sesion_ID		int not 	null AUTO_INCREMENT,--# Cambiar varchar por samllInt
+	horaInicio		time, --# formato [hh:mm:ss].El argumento es la parte fraccionaria de los segundos
 	horaFin			time,
 	dia				tinyint,
 	persona_ID		int,
@@ -54,7 +54,7 @@ create table sesion (
 );
 
 create table parentesco (
-	parentesco_ID	int 		not null AUTO_INCREMENT,	# Cambiar varchar por samllInt
+	parentesco_ID	int 		not null AUTO_INCREMENT,	--# Cambiar varchar por samllInt
 	tipo_parentesco	varchar(10),
 	persona_ID		int,
 	primary key (parentesco_ID),
@@ -62,7 +62,7 @@ create table parentesco (
 );
 
 create table asignatura (
-	asignatura_ID	int 		not null AUTO_INCREMENT,# Cambiar varchar por samllInt
+	asignatura_ID	int 		not null AUTO_INCREMENT,--# Cambiar varchar por samllInt
 	nombre_asig		varchar(20),	
 	persona_ID		int 		not null,
 	aula_ID			int,

@@ -17,17 +17,21 @@ public class GestorDatos <K, V> implements OyenteEventos, Ficherador{
 	protected String ruta;
 	protected EmisorEventos emisor;
 	
+	/**
+	 * 
+	 * @param ruta direccion del archivo.obj que contiene registros de uso actual
+	 */
 	@SuppressWarnings("unchecked")
 	public GestorDatos(String ruta) {
 		super();
-		pendientesInsertar = new HashMap<K,V>();
-		pendientesBorrar   = new ArrayList<K>();
-		actuales           = new HashMap<K,V>();
+		pendientesInsertar = new HashMap<>();
+		pendientesBorrar   = new ArrayList<>();
+		actuales           = new HashMap<>();
 		emisor             = new EmisorEventos();
 		
 		this.ruta=ruta;
 		this.actuales=(HashMap<K, V>) leer(ruta);
-		if(actuales==null) actuales = new HashMap<K, V>();
+		if(actuales==null) actuales = new HashMap<>();
 		
 		System.out.println(actuales.size());
 	}
