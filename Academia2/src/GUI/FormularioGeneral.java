@@ -20,7 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.text.MaskFormatter;
 
-public class FormularioGeneral extends JPanel implements GUI{
+public class FormularioGeneral extends JPanel implements GuiIF{
 
 	protected Field[] atributos;
 	protected HashMap<Field, JComponent> fields; /*NOTA: No aceptan objetos nulos*/

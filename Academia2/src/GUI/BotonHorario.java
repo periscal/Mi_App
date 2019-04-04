@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 
 import Registrables.Alumno_Sesion;
 
-public class BotonHorario extends BotonAbreVentana implements GUI{
+public class BotonHorario extends BotonAbreVentana implements GuiIF{
 
 	//private Horario h;
 	private static Action accionAceptar;
@@ -31,7 +31,7 @@ public class BotonHorario extends BotonAbreVentana implements GUI{
 		sesiones=((Horario) comp).devuelveSelecionSesion();
 		Field[] declaredFields = (Alumno_Sesion.class).getDeclaredFields();
 		ArrayList<HashMap<Field, Object>> a = new ArrayList<HashMap<Field, Object>>();
-		System.out.println("Tamaño seleccion de sesiones: "+ sesiones.size()); //TODO Quitar comprobacion
+		System.out.println("Tamaï¿½o seleccion de sesiones: "+ sesiones.size()); //TODO Quitar comprobacion
 		for(String s: sesiones) {
 			HashMap<Field, Object> o = new HashMap<Field, Object>();
 			o.put(declaredFields[0], id);

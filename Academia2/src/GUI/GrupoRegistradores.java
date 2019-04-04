@@ -28,7 +28,7 @@ public class GrupoRegistradores extends JFrame{
 	
 	public GrupoRegistradores(Class<?> claseAsociada){
 		super();
-		this.gD = new ArrayList<Registrador>();
+		this.gD = new ArrayList<>();
 		this.claseAsociada=claseAsociada;
 		//----------------- ASPECTO -------------------//
 		Aspecto.aplicarAspecto(this);

@@ -4,14 +4,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import GUI.GUI;
+import GUI.GuiIF;
 import Registrables.TipoRegistrable;
 
 public class Registrador extends GestorDatos <String, TipoRegistrable>{
-	protected GUI ui;
+	protected GuiIF ui;
 	private Class<?> c;
 
-	public Registrador(Class<?> nameclass, GUI gui){
+	public Registrador(Class<?> nameclass, GuiIF gui){
 		super("Registros/"+nameclass.getSimpleName()+".obj");
 		this.c=nameclass;
 		this.ui=gui;			//Cada Registrador de Entidad tendra su propio formulario
@@ -36,5 +36,5 @@ public class Registrador extends GestorDatos <String, TipoRegistrable>{
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {e.printStackTrace();
 		}
 	}
-	public GUI getGUI() {return ui;}
+	public GuiIF getGUI() {return ui;}
 }
