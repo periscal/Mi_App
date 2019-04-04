@@ -19,14 +19,19 @@ create table persona (
 );
 
 create table alumno (
+	persona_ID		int,
 	fecha_inicio	date,
 	tasa			numeric (5,2),
-	persona_ID		int,
+	foreign key (persona_ID) references persona(persona_ID)
+);
+
+create table profesor (
+	persona_ID 		int,
 	foreign key (persona_ID) references persona(persona_ID)
 );
 
 create table centro (
-	centro_ID		int 		not null AUTO_INCREMENT,# Cambiar varchar por samllInt
+	centro_ID		int 		not null AUTO_INCREMENT,--# Cambiar varchar por samllInt
 	tipo_centro		varchar(10),
 	nombre_cent		varchar(30),
 	localidad		varchar(20),
@@ -35,7 +40,7 @@ create table centro (
 );
 
 create table aula (
-	aula_ID			int 	not null AUTO_INCREMENT,# Cambiar varchar por samllInt
+	aula_ID			int 	not null AUTO_INCREMENT,--# Cambiar varchar por samllInt
 	curso			tinyint,	# 1 byte
 	letra			char(1),
 	centro_ID		int,
@@ -50,7 +55,16 @@ create table sesion (
 	dia				tinyint,
 	persona_ID		int,
 	primary key (sesion_ID),
-	foreign key (persona_ID) references persona(persona_ID)
+	foreign key (persona_ID) references profesor(persona_ID)
+);
+
+create table servicio(
+	persona_ID		int,
+	tipoServicio	ENUM('diario','semanal','mensual','anual'),
+	fecha_inicio	date,
+	fecha_fin		date,
+	tarifa			float,
+	foreign key (persona_ID) references persona(persona_ID)	
 );
 
 create table parentesco (
@@ -86,4 +100,6 @@ create table alumno_sesion(
 	foreign key (persona_ID) references persona(persona_ID),
 	foreign key (sesion_ID) references sesion(sesion_ID)
 );
+
+
 

@@ -82,7 +82,7 @@ public class Marco{
 			grupos.put((Class<?>) c1, g);
 			
 			HashMap<Class<?>, Registrador> rel = relaciones.get(c1);
-			if(rel!=null) for(Registrador r:rel.values()) g.insertarRegistrador(r);
+			if(rel!=null) for(Registrador r:rel.values()) g.getgD().add(r);
 		}
 		
 		// --- Panel Menu Grupos de Registradores ----//

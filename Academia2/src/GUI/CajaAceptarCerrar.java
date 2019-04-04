@@ -27,4 +27,8 @@ public class CajaAceptarCerrar extends Box{
 		aceptar.setBackground(Color.GRAY);
 		cancelar.setBackground(Color.GRAY);
 	}
+
+	public JButton getCancelar() {return cancelar;}
+	public JButton getAceptar() {return aceptar;}
+
 }

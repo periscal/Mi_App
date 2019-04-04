@@ -1,59 +1,38 @@
 package GUI;
 
 import java.awt.event.ActionEvent;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import Principal.*;
 
-public class GrupoRegistradores extends JFrame{
+public class GrupoRegistradores extends GuiFrame{
 	private ArrayList<Registrador> gD; //TODO transformarlo en HashMap siendo la clave la clase correspondiente
-	private Box cajaBotones;
-	private JButton cerrar;
-	private JButton aceptar;
-	private Action accionCancelar;
-	private Action accionAceptar;
+
 	private Class<?> claseAsociada;
 	
 	public GrupoRegistradores(Class<?> claseAsociada){
 		super();
 		this.gD = new ArrayList<>();
 		this.claseAsociada=claseAsociada;
-		//----------------- ASPECTO -------------------//
-		Aspecto.aplicarAspecto(this);
 		
 		//----------------- BOTONES ACEPTAR/CERRAR -------------------//
-		cajaBotones=Box.createHorizontalBox();
-		accionAceptar = new AbstractAction() {public void actionPerformed(ActionEvent e) {nuevosRegistros();}};
-		aceptar = new JButton(accionAceptar);
-		accionCancelar = new AbstractAction() {public void actionPerformed(ActionEvent e) {dispose();}};//
-		cerrar= new JButton(accionCancelar);
-		
-		aceptar.setText("Aceptar");
-		cerrar.setText("Cerrar");
-		
-		cajaBotones.add(aceptar);
-		cajaBotones.add(cerrar);
+		Action accionAceptar = new AbstractAction() {public void actionPerformed(ActionEvent e) {nuevosRegistros();}};
+		super.aceptarCancelar.getAceptar().setAction(accionAceptar);
+
 		//----------------------------------------------------------//
-		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
-		//this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.add(cajaBotones);
+		
+		this.add(super.aceptarCancelar);
 	}
 	
-	public void insertarRegistrador(Registrador reg) {
-		gD.add(reg);
-	}
 	public void nuevosRegistros() {
 		ListIterator<Registrador> iterator = gD.listIterator();
 		String id = java.util.UUID.randomUUID().toString();
@@ -70,7 +49,7 @@ public class GrupoRegistradores extends JFrame{
 		
 		if(superclasePresente) this.creaGrupo((Class<?>) superclase,entidades,registradores);
 		
-		this.insertarRegistrador(registradores.get(entidad));
+		gD.add(registradores.get(entidad));
 	}
 	
 	public void rePintar() {
@@ -78,8 +57,15 @@ public class GrupoRegistradores extends JFrame{
 		//for(Registrador reg : gD) this.add((JComponent) ((Registrador) reg).getGUI());
 	}
 	
-	public ArrayList<Registrador> getgD() {return gD;}
-	public void setgD(ArrayList<Registrador> gD) {this.gD = gD;}
+	public List<Registrador> getgD() {return gD;}
+	public void setgD(List<Registrador> gD) {this.gD = (ArrayList<Registrador>) gD;}
 
 	public Class<?> getClaseAsociada() {return claseAsociada;}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
