@@ -4,22 +4,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
 public class BotonAbreVentana extends JButton implements ActionListener{
-	protected VentanaAceptarCerrar v;
+	protected GuiFrame v;
 	protected JComponent comp;
 	
-	public BotonAbreVentana(String nombre,ImageIcon icono,Action accionAceptar, JComponent comp) {
+	public BotonAbreVentana(String nombre,ImageIcon icono, JComponent comp) {
 		super(nombre, icono);
-		v = new VentanaAceptarCerrar(accionAceptar,comp);
+		
+		v= new GuiFrame();
+		Aspecto.aplicarAspecto(this);
+		BoxLayout b =  new BoxLayout(v.pane,BoxLayout.Y_AXIS);
+		v.pane.setLayout(b);
 		this.comp=comp;
 		this.addActionListener((ActionListener) this);
 		
-		//----- Aspecto ----- //
-		Aspecto.aplicarAspecto(this);
 	}
 	
 	@Override

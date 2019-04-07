@@ -12,33 +12,30 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 
+import Eventos.EmisorEventos;
 import Principal.*;
 
 public class GrupoRegistradores extends GuiFrame{
 	private ArrayList<Registrador> gD; //TODO transformarlo en HashMap siendo la clave la clase correspondiente
 
 	private Class<?> claseAsociada;
+	private HashMap<Class<?>,Registrador> regs;
 	
-	public GrupoRegistradores(Class<?> claseAsociada){
+	public GrupoRegistradores(){
 		super();
 		this.gD = new ArrayList<>();
-		this.claseAsociada=claseAsociada;
-		
+		regs = new HashMap<>();
 		//----------------- BOTONES ACEPTAR/CERRAR -------------------//
 		Action accionAceptar = new AbstractAction() {public void actionPerformed(ActionEvent e) {nuevosRegistros();}};
 		super.aceptarCancelar.getAceptar().setAction(accionAceptar);
-
 		//----------------------------------------------------------//
 		
-		this.add(super.aceptarCancelar);
 	}
 	
 	public void nuevosRegistros() {
-		ListIterator<Registrador> iterator = gD.listIterator();
 		String id = java.util.UUID.randomUUID().toString();
-		while(iterator.hasNext()) {
-			iterator.next().nuevoRegistro(id);
-		}
+		
+		for(Registrador r:regs.values()) r.nuevoRegistro(id);
 	}
 	
 	public void creaGrupo(Class<?> entidad,Set<Class<?>> entidades,HashMap<Class<?>,Registrador> registradores) {
@@ -48,24 +45,22 @@ public class GrupoRegistradores extends GuiFrame{
 		for(Class<?> c :entidades) if(c.equals(superclase)) superclasePresente=true;
 		
 		if(superclasePresente) this.creaGrupo((Class<?>) superclase,entidades,registradores);
-		
+		regs.put(entidad, registradores.get(entidad));
 		gD.add(registradores.get(entidad));
-	}
-	
-	public void rePintar() {
-		for(Registrador reg : gD) this.getContentPane().add((JComponent) ((Registrador) reg).getGUI());
-		//for(Registrador reg : gD) this.add((JComponent) ((Registrador) reg).getGUI());
 	}
 	
 	public List<Registrador> getgD() {return gD;}
 	public void setgD(List<Registrador> gD) {this.gD = (ArrayList<Registrador>) gD;}
 
 	public Class<?> getClaseAsociada() {return claseAsociada;}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void setClaseAsociada(Class<?> claseAsociada) {this.claseAsociada = claseAsociada;}
+	
+	public void insertarReg(Registrador r) {regs.put(r.clase(),r);}
+	
+	public void  visibilizar() {
+		panel.removeAll();
+		for(Registrador r:regs.values()) panel.add((JComponent) r.getGUI());
+		this.setVisible(true);
 	}
 
 }

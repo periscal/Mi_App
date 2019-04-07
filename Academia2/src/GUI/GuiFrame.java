@@ -1,30 +1,32 @@
 package GUI;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import java.awt.Container;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public abstract class GuiFrame extends JFrame implements ActionListener{
+public  class GuiFrame extends JFrame{
+	private static final long serialVersionUID = 1L;
+
+	protected JPanel panel;
 	protected CajaAceptarCerrar aceptarCancelar;
+	protected Container pane;
 
 	public GuiFrame() {
 		super();
-		
+		pane = this.getContentPane();
+		panel= new JPanel();
+
 		Aspecto.aplicarAspecto(this);
 		//Layout
-		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));	
-		
+		BoxLayout layout=new BoxLayout(pane, BoxLayout.Y_AXIS);
+		pane.setLayout(layout);	
+		//Panel Principal
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		pane.add(panel);
 		//Botones Aceptar y Cancelar
-		this.aceptarCancelar= new CajaAceptarCerrar(this);
-		Action accionCancelar = new AbstractAction() {public void actionPerformed(ActionEvent e) {dispose();}};
-		this.aceptarCancelar.getCancelar().setAction(accionCancelar);
-		
+		aceptarCancelar= new CajaAceptarCerrar(this);
+		//Anadir componentes al JFrame
+		pane.add(aceptarCancelar);
 	}
-	
-	
-
 }

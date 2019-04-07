@@ -175,4 +175,6 @@ public class FormularioGeneral extends JPanel implements GuiIF{
 		 a.add(leidos);
 		return a;
 	}
+
+	public Class<?> clase() {return clase;}
 }

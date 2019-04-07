@@ -37,4 +37,5 @@ public class Registrador extends GestorDatos <String, TipoRegistrable>{
 		}
 	}
 	public GuiIF getGUI() {return ui;}
+	public Class<?> clase() {return c;}
 }
