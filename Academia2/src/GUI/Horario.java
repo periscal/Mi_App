@@ -81,14 +81,14 @@ public class Horario extends JPanel{
 		this.add(vista_horario);
 		//this.add(opciones_horario);
 
-		etiquetasSesiones = new HashMap<String,EtiquetaSesion>();
-		etiquetasAlumnos = new HashMap<String,EtiquetaAlumno>();
-		etiqSesiSeleccionadas = new ArrayList<String>();
-		etiqAlumSeleccionadas = new ArrayList<String>();
+		etiquetasSesiones = new HashMap<>();
+		etiquetasAlumnos = new HashMap<>();
+		etiqSesiSeleccionadas = new ArrayList<>();
+		etiqAlumSeleccionadas = new ArrayList<>();
 	}
 
 	/* =============== CLASES INTERNAS ========================*/
-	public class EtiquetaSesion extends JPanel{
+	protected class EtiquetaSesion extends JPanel{
 		private String iDsesion; //De ser el mismo qie el id de sesion correspondiente al objeto sesion (o entidad en BBDD)
 		private boolean seleccionable;
 		private boolean selecionado;
@@ -105,7 +105,7 @@ public class Horario extends JPanel{
 			this.setBackground(Color.white);
 			BoxLayout b =new BoxLayout(this,BoxLayout.Y_AXIS);
 			this.setLayout(b);
-			// Tamaños
+			// Tamanos
 			posicionAbsolutaInicio=inicio.getHours()*60+inicio.getMinutes();
 			posicionAbsolutaFin=fin.getHours()*60+fin.getMinutes();
 			define();
@@ -157,13 +157,13 @@ public class Horario extends JPanel{
 			double altura = alto_tiempo*denominador;
 
 			this.setBounds(0, posicionRelativaInicio, dimHorario.width/num_dias, (int) Math.round(altura));
-			//TODO revisar tamaño (ancho) etiquetas
+			//TODO revisar tamano (ancho) etiquetas
 			}
 		}
 	}
 	
 	
-	public class EtiquetaAlumno extends JLabel{
+	protected class EtiquetaAlumno extends JLabel{
 		private String iDAlumno;
 		private String nombreAlumno;
 		private Boolean seleccionable;
@@ -254,7 +254,14 @@ public class Horario extends JPanel{
 		eS.add(new JLabel("Eii"));
 	}
 	
-	//----------------------------------------------------------------------------//
+	/**
+	 * <h2><i> insertarAlumno </i></h2>
+	 * <p><code> public void insertarAlumno(String IDAlumno, String nombre, String IDSesion)</code></p>
+	 * <p>Inserta un alumno en el horario en una sesiÃ³n concreta</p>
+	 * @param IDAlumno - identificador del alumno y la etiqueta del mismo
+	 * @param nombre - cadena de caracteres que se escribiran en la correspondiente etiqueta del alumno
+	 * @param IDSesion - identificador de la sesion en la que se introduce la etiqueta del alumno
+	 */
 	public void insertarAlumno(String IDAlumno, String nombre, String IDSesion) {
 		EtiquetaAlumno eA= new EtiquetaAlumno(IDAlumno,nombre);
 		etiquetasSesiones.get(IDSesion).add(eA);

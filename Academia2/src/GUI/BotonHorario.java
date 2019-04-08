@@ -29,12 +29,15 @@ public class BotonHorario extends BotonAbreVentana implements GuiIF{
 
 	@Override
 	public ArrayList<HashMap<Field, Object>> getAtributos(String id) {
+		// Devuelve la seleccion de sesiones marcadas en el horario
 		sesiones=((Horario) comp).devuelveSelecionSesion();
+		
 		Field[] declaredFields = (Alumno_Sesion.class).getDeclaredFields();
-		ArrayList<HashMap<Field, Object>> a = new ArrayList<HashMap<Field, Object>>();
+		ArrayList<HashMap<Field, Object>> a = new ArrayList<>();
 		System.out.println("Tamano seleccion de sesiones: "+ sesiones.size()); //TODO Quitar comprobacion
+		
 		for(String s: sesiones) {
-			HashMap<Field, Object> o = new HashMap<Field, Object>();
+			HashMap<Field, Object> o = new HashMap<>();
 			o.put(declaredFields[0], id);
 			o.put(declaredFields[1], s);
 			a.add(o);

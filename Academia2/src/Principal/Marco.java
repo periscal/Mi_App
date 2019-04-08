@@ -29,26 +29,13 @@ public class Marco{
 	static HashMap<Class<?>, GrupoRegistradores> grupos;
 	public static HorarioEspecifico horario;
 	
-	//TODO revisar su necesidad
-	static class Boton extends JButton implements ActionListener{
-		private GrupoRegistradores rE;
-		public Boton(String nombre, GrupoRegistradores rE,ImageIcon icono) {
-			super(nombre, icono);
-			this.rE=rE;
-			this.addActionListener((ActionListener) this);
-		}
-		public void actionPerformed(ActionEvent e) {
-			this.rE.visibilizar();
-			}
-		
-		public void addToFrame(Component componente) {rE.add(componente);}
-	}
 	
 	public static void main(String[] args){
 		//================== Ventana Principal =================//
 		ventana = new JFrame();
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Aspecto.aplicarAspecto(ventana);
+		registradores = new HashMap<>();
 		/**
 		//================== Registradores =================//
 		registradores=new HashMap<Class<?>,Registrador>(); 
@@ -100,11 +87,11 @@ public class Marco{
 		FormularioGeneral f_Sesion 	 = new FormularioGeneral(Sesion.class);
 		BotonHorario      b_Horario  = new BotonHorario("Horario",null, horario);
 		//Instanciacion Registradores
-		Registrador r_Persona 	= new Registrador(Persona.class,f_Persona);
-		Registrador r_Alumno 	= new Registrador(Alumno.class,f_Alumno);
-		Registrador r_Profesor  = new Registrador(Profesor.class,f_Profesor);
-		Registrador r_Sesion 	= new Registrador(Sesion.class,f_Sesion);
-		Registrador r_AlumnoSesion= new Registrador(Alumno_Sesion.class, b_Horario);
+		Registrador r_Persona 		= new Registrador(Persona.class,f_Persona);			registradores.put(Persona.class, r_Persona);
+		Registrador r_Alumno 		= new Registrador(Alumno.class,f_Alumno);			registradores.put(Alumno.class, r_Persona);
+		Registrador r_Profesor  	= new Registrador(Profesor.class,f_Profesor);		registradores.put(Profesor.class, r_Persona);
+		Registrador r_Sesion 		= new Registrador(Sesion.class,f_Sesion);			registradores.put(Sesion.class, r_Persona);
+		Registrador r_AlumnoSesion	= new Registrador(Alumno_Sesion.class, b_Horario);	registradores.put(Alumno_Sesion.class, r_Persona);
 		//Instanciacion GruposRegistradores
 		GrupoRegistradores gr_Persona				= new GrupoRegistradores();
 		GrupoRegistradores gr_PersonaAlumnoHorario  = new GrupoRegistradores(); 
@@ -119,23 +106,29 @@ public class Marco{
 		gr_PersonaProfesor.insertarReg(r_Profesor);
 				
 		gr_Sesion.insertarReg(r_Sesion);
-		//Construccion Horario
-		for(TipoRegistrable s: r_Sesion.getActuales().values()) {
-			horario.insertarSesion((Sesion) s);
-		}
-		for(TipoRegistrable as : r_Alumno.getActuales().values()) {
-			Alumno a = (Alumno)  r_Alumno.getActuales().get(((Alumno_Sesion) as).getClaveAlumno());
-			horario.insertarAlumno(a, ((Alumno_Sesion) as).getClaveSesion());
-		}
 		
-		// --- Panel Menu Grupos de Registradores ----//
+		//Preparacion Botones de Grupos de Registradores
 		JPanel registros = new JPanel(); 
 		Aspecto.aplicarAspecto(registros);
 		registros.setLayout(new BoxLayout(registros, BoxLayout.Y_AXIS ));
-		registros.add(new Boton("Alumno", gr_PersonaAlumnoHorario, null));
-		registros.add(new Boton("Sesion", gr_Sesion, null));
-		registros.add(new Boton("Profesor", gr_PersonaProfesor, null));
 		
+		registros.add(gr_Persona.botonGrupo("Persona", null));
+		registros.add(gr_PersonaAlumnoHorario.botonGrupo("Alumno",null));
+		registros.add(gr_PersonaProfesor.botonGrupo("Profesor", null));
+		registros.add(gr_Sesion.botonGrupo("Sesion", null));
+		
+		//=========== Construccion Horario ==================
+		//Insercion de todas las sesiones en el horario
+		for(TipoRegistrable s: r_Sesion.getActuales().values()) {horario.insertarSesion((Sesion) s);}
+		
+		// Insercion de todos los alumnos en su sesion correspondiente
+		for(TipoRegistrable as : r_AlumnoSesion.getActuales().values()) {
+			Alumno a = (Alumno)  r_Alumno.getActuales().get(((Alumno_Sesion) as).getClaveAlumno());
+			horario.insertarAlumno(a, ((Alumno_Sesion) as).getClaveSesion());
+		}
+		horario.repaint();
+		//=====================================================
+
 		// =================== BASE de DATOS =====================//
 		String server ="jdbc:mysql://localhost:3306/academia?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"  /*"jdbc:mysql://C:\\Users\\aquem\\Desktop\\Programing\\WorkSpace PC\\Academia2\\Drivers\\academia.sql"*/;
 		try {
@@ -150,6 +143,7 @@ public class Marco{
 		p.addTab("Horario", horario);
 		p.addTab("Registros", registros);
 		ventana.add(p);
+		ventana.pack();
 		ventana.setVisible(true);
 	}
 }

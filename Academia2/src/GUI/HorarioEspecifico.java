@@ -13,6 +13,7 @@ import Registrables.*;
 
 public class HorarioEspecifico extends Horario implements OyenteEventos{
 
+	
 	public void construir(HashMap<Class<?>,Registrador> registradores, Registrador registradorHorario) {
 		// Construir Horario
 		HashMap<String, TipoRegistrable> sesiones = registradores.get(Sesion.class).getActuales();
@@ -26,28 +27,37 @@ public class HorarioEspecifico extends Horario implements OyenteEventos{
 		}
 	}
 
-	public void insertarSesion(Sesion s) {
-		String ID = s.getId();
-		DayOfWeek dia = s.getDia();
-		Time inicio =s.getHoraInicio();
-		Time fin = s.getHoraFin();
-		EtiquetaSesion eS= new EtiquetaSesion(ID,dia,inicio, fin);
+	/**
+	 * Inserta una nueva sesión en el hoario
+	 * @param sesion - Objeto tipo 'Sesion' que propocina la información para mostrar la nueva sesión
+	 */
+	public void insertarSesion(Sesion sesion) {
+		String idses = sesion.getId();
+		DayOfWeek dia = sesion.getDia();
+		Time inicio =sesion.getHoraInicio();
+		Time fin = sesion.getHoraFin();
+		EtiquetaSesion eS= new EtiquetaSesion(idses,dia,inicio, fin);
 		/** //Si se inserta una sesion, se redefinen las demas existentes
 		for(EtiquetaSesion es : etiquetasSesiones.values()) {
 			es.define();
 		}**/
-		etiquetasSesiones.put(ID,eS);
+		etiquetasSesiones.put(idses,eS);
 		dias.get(dia).add(eS);
 		eS.add(new JLabel("Eii"));
 	}
 
-
-	public void insertarAlumno(Alumno a, String IDSesion) {
-		String IDAlumno=a.getId();
-		String nombre = a.getNombre();
-		EtiquetaAlumno eA= new EtiquetaAlumno(IDAlumno,nombre);
-		etiquetasSesiones.get(IDSesion).add(eA);
-		etiquetasAlumnos.put(IDAlumno, eA);
+	/**
+	 * Inserta un alumno en el horario en una sesión concreta
+	 * @param alumno - objeto de tipo 'Alumno' que proporciona la información que se expresará en el horario
+	 * @param idSesion - id de la sesión en la que se insertará el nuevo alumno
+	 */
+	public void insertarAlumno(Alumno alumno, String idSesion) {
+		String idAlumno=alumno.getId();
+		String nombre = alumno.getNombre();
+		EtiquetaAlumno eA= new EtiquetaAlumno(idAlumno,nombre);
+		etiquetasSesiones.get(idSesion).add(eA);
+		etiquetasAlumnos.put(idAlumno, eA);
+		System.out.println("Se ha insertado alumno en horario");
 	}
 
 	@Override

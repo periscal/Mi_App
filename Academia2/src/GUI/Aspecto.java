@@ -15,7 +15,7 @@ public interface Aspecto {
 	public static void aplicarAspecto(JComponent gui) {
 		gui.setBackground(colorFondo);
 		gui.setForeground(Color.WHITE);
-		gui.setBorder(BorderFactory.createEmptyBorder());
+		//gui.setBorder(BorderFactory.createEmptyBorder());
 	}
 	
 	public static void aplicarAspecto(JFrame v) {

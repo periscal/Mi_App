@@ -2,8 +2,9 @@ package Principal;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import GUI.GuiIF;
 import Registrables.TipoRegistrable;
 
@@ -23,7 +24,7 @@ public class Registrador extends GestorDatos <String, TipoRegistrable>{
 		try {
 			TipoRegistrable nuevoRegistro =  (TipoRegistrable) c.getConstructor().newInstance();
 
-			ArrayList<HashMap<Field, Object>> l = ui.getAtributos(iD);
+			List<HashMap<Field, Object>> l = ui.getAtributos(iD);
 			for(HashMap<Field, Object> h:l) {
 				for(Field campoClase:h.keySet()) nuevoRegistro.setGeneral(campoClase, h.get(campoClase));
 
