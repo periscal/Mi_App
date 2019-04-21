@@ -3,6 +3,7 @@ package GUI;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -12,29 +13,31 @@ import Registrables.Alumno_Sesion;
 public class BotonHorario extends BotonAbreVentana implements GuiIF{
 
 	private Class<?> clase;
-	private ArrayList<String> sesiones;
+	private List<String> sesiones;
+	public HorarioEspecifico horario;
 
 	public BotonHorario(String nombre, ImageIcon icono, Horario h) {
-		super(nombre, icono, h);
+		super(nombre, icono/*, horario*/);
 		sesiones=new ArrayList<>();
+		horario = new HorarioEspecifico();
 		
 		Action accionAceptar = new AbstractAction() {public void actionPerformed(ActionEvent e) {
 			System.out.println("Boton aceptar horario");
-			sesiones=h.devuelveSelecionSesion();
+			sesiones=horario.devuelveSelecionSesion();
+			v.dispose();
 			}
 		};
-		this.v.aceptarCancelar.getAceptar().setAction(accionAceptar);
-		this.v.add(h);
+		v.aceptarCancelar.getAceptar().setAction(accionAceptar);
+		v.add(horario);
 	}
 
 	@Override
-	public ArrayList<HashMap<Field, Object>> getAtributos(String id) {
+	public List<HashMap<Field, Object>> getAtributos(String id) {
 		// Devuelve la seleccion de sesiones marcadas en el horario
-		sesiones=((Horario) comp).devuelveSelecionSesion();
+		sesiones=((Horario) horario).devuelveSelecionSesion();
 		
 		Field[] declaredFields = (Alumno_Sesion.class).getDeclaredFields();
-		ArrayList<HashMap<Field, Object>> a = new ArrayList<>();
-		System.out.println("Tamano seleccion de sesiones: "+ sesiones.size()); //TODO Quitar comprobacion
+		List<HashMap<Field, Object>> a = new ArrayList<>();
 		
 		for(String s: sesiones) {
 			HashMap<Field, Object> o = new HashMap<>();
@@ -47,4 +50,9 @@ public class BotonHorario extends BotonAbreVentana implements GuiIF{
 
 	@Override
 	public Class<?> clase() {return clase;}
+	
+	public void actionPerformed(ActionEvent e) {
+		horario.construir();
+		v.setVisible(true);
+	}
 }

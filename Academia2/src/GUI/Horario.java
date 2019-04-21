@@ -1,15 +1,21 @@
 package GUI;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Time;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -18,24 +24,30 @@ import Principal.Marco;
 
 //El horario es un objeto que se crea cada vez que se inicia la aplicación o cada vez que se añade/modifica una sesión
 // No se guarda en un archivo
-public class Horario extends JPanel{
 
-	protected int diasLaborales=5;
-	protected HashMap<DayOfWeek,JPanel> dias;
-	protected int tamanoMaximoSesion=16;
-	protected JPanel vista_horario;
+/**
+ * La clase {@code Horario} muestra graficamente...
+ * @author juan
+ *
+ */
+public class Horario extends Container{
+	private static final long serialVersionUID = 1L;
+
+
+	protected enum diasSemana{Lunes, Martes, Miercoles, Jueves, Viernes, Sabado, Domingo};
+	protected EnumMap<DayOfWeek,Container> dias;
 
 	protected HashMap<String,EtiquetaSesion> etiquetasSesiones;
-	protected HashMap<String,EtiquetaAlumno> etiquetasAlumnos;
-	protected ArrayList<String> etiqSesiSeleccionadas;
-	protected List<String> etiqAlumSeleccionadas;
+	protected HashMap<String,EtiquetaUsuario> etiquetasAlumnos;
+	protected static List<String> etiqSesiSeleccionadas;
+	protected static List<String> etiqAlumSeleccionadas;
 
 	//// NUEVO ///////
-	protected Dimension dimHorario;
-	protected int num_dias=7;
+	protected static Dimension dimHorario;
+	protected static int numDias=7;
 	protected int label_size;
-	protected double alto_tiempo=1;
-	protected int time_min=15*60+30;
+	protected static double alto_tiempo=1;
+	protected static int time_min=15*60+30;
 	protected int time_max;
 
 	/////////////////
@@ -45,179 +57,37 @@ public class Horario extends JPanel{
 
 		/*======= ASPECTO de Horario =======*/
 		this.setBackground(Color.white);
-		BoxLayout bb =new BoxLayout(this,BoxLayout.Y_AXIS);
+		BoxLayout bb =new BoxLayout(this,BoxLayout.X_AXIS);
 		this.setLayout(bb);
 		dimHorario = new Dimension(Marco.ventana.getWidth()*8/10/****/,Marco.ventana.getHeight()*4/5/****/);
 		this.setPreferredSize(dimHorario);
 		/*----------------------------------*/
 
-		vista_horario =new JPanel();
-		/*======= ASPECTO de Horario =======*/
-		vista_horario.setBackground(Color.white);
-		BoxLayout b =new BoxLayout(vista_horario,BoxLayout.X_AXIS);
-		vista_horario.setLayout(b);
-		vista_horario.setSize(dimHorario);
-		/*----------------------------------*/
+		dias=new EnumMap<>(DayOfWeek.class);
 
-		dias=new HashMap<DayOfWeek,JPanel>();
-
-		for(int i=0; i<num_dias; i++) {
-
-			JPanel p= new JPanel(); // Panel para cada dia
+		for(int i=0; i<numDias; i++) {
+			JPanel c= new JPanel(); // Panel para cada dia
+			c.setName(DayOfWeek.of(i+1).name());
 			/*======= ASPECTO de los panles de cada dia =======*/
-			//p.setPreferredSize();
-			p.setPreferredSize(new Dimension(dimHorario.width/num_dias,dimHorario.height));
+			c.setPreferredSize(new Dimension(dimHorario.width/numDias,dimHorario.height));
 			Border borde = null;
-			borde=BorderFactory.createTitledBorder(borde, DayOfWeek.of(i+1).name(), TitledBorder.CENTER, TitledBorder.ABOVE_TOP, null, Color.black);
-			p.setBorder(borde);
-			p.setBackground(Color.white);
-			p.setLayout(null);
+			borde=BorderFactory.createTitledBorder(borde,c.getName(), TitledBorder.CENTER, TitledBorder.ABOVE_TOP, null, Color.black);
+			c.setBorder(borde);
+			c.setBackground(Color.white);
+			c.setLayout(null);
 			/*-------------------------------------------------*/
-			dias.put(DayOfWeek.of(i+1), p);
-			vista_horario.add(p);//Se añade panel dia a panel horario
+			dias.put(DayOfWeek.of(i+1), c);
+			this.add(c);//Se añade panel dia a panel horario
 		}
-
-		/*-------------------------------------*/
-		this.add(vista_horario);
-		//this.add(opciones_horario);
-
 		etiquetasSesiones = new HashMap<>();
 		etiquetasAlumnos = new HashMap<>();
 		etiqSesiSeleccionadas = new ArrayList<>();
 		etiqAlumSeleccionadas = new ArrayList<>();
 	}
 
-	/* =============== CLASES INTERNAS ========================*/
-	protected class EtiquetaSesion extends JPanel{
-		private String iDsesion; //De ser el mismo qie el id de sesion correspondiente al objeto sesion (o entidad en BBDD)
-		private boolean seleccionable;
-		private boolean selecionado;
-		private MouseListener click_raton;
-
-		private int posicionAbsolutaInicio;
-		private int posicionAbsolutaFin;
-
-		public EtiquetaSesion(String iDSesion,DayOfWeek dia, Time inicio, Time fin) {
-			super();
-
-			/*======= ASPECTO de Etiqueta =======*/
-			// Colores
-			this.setBackground(Color.white);
-			BoxLayout b =new BoxLayout(this,BoxLayout.Y_AXIS);
-			this.setLayout(b);
-			// Tamanos
-			posicionAbsolutaInicio=inicio.getHours()*60+inicio.getMinutes();
-			posicionAbsolutaFin=fin.getHours()*60+fin.getMinutes();
-			define();
-			/*----------------------------------*/
-			seleccionable=true;
-			selecionado=false;
-
-			this.iDsesion = iDSesion;
-			//this.add(new JLabel(iDsesion));
-			Border borde=BorderFactory.createLineBorder(Color.BLACK, 1);
-			this.setBorder(borde);
-
-			click_raton = new MouseListener() {
-				public void mouseClicked(MouseEvent e) {cambiarSeleccion();}
-				public void mousePressed(MouseEvent e) {}
-				public void mouseReleased(MouseEvent e) {}
-				public void mouseEntered(MouseEvent e) {}
-				public void mouseExited(MouseEvent e) {}
-			};
-
-			this.addMouseListener(click_raton);
-		// Comprobacion de que acepta Etiquetas alumnos
-		this.add(new EtiquetaAlumno("00000", "Prueba"));
-		//TODO eliminar caso prueba
-		}
-
-		/*===================== METODOS ===========================*/	
-		public void cambiarSeleccion() {
-			selecionado=Boolean.logicalXor(selecionado,true);
-			if(seleccionable==true) {
-				if(selecionado==true) {this.setBackground(Color.GREEN);}
-				else {this.setBackground(null);}
-			}
-		}
-		public Boolean isSelecionado() {return selecionado;}
-		public String getiDsesion() {return iDsesion;}
-
-		public void define() {
-			if(posicionAbsolutaInicio<time_min) time_min=posicionAbsolutaInicio;
-			int posicionRelativaInicio=posicionAbsolutaInicio-time_min;
-			
-			if(posicionAbsolutaFin<time_min) time_min=posicionAbsolutaFin;
-			int posicionRelativaFin=posicionAbsolutaFin-time_min;
-
-			int denominador=posicionAbsolutaFin-posicionAbsolutaInicio;
-			if(denominador>0) {
-			int tasa = this.getHeight()/denominador;
-			if(tasa>alto_tiempo)alto_tiempo=tasa;
-			double altura = alto_tiempo*denominador;
-
-			this.setBounds(0, posicionRelativaInicio, dimHorario.width/num_dias, (int) Math.round(altura));
-			//TODO revisar tamano (ancho) etiquetas
-			}
-		}
-	}
-	
-	
-	protected class EtiquetaAlumno extends JLabel{
-		private String iDAlumno;
-		private String nombreAlumno;
-		private Boolean seleccionable;
-		private Boolean selecionado;
-		private MouseListener click_raton;
-
-		public EtiquetaAlumno(String ID, String nombre) {
-			super();
-			this.iDAlumno=ID;
-			this.nombreAlumno=nombre;
-			//this.setText(alumno.getiDprovisional()/*alumno.getNombre()+alumno.getApellido1().substring(0, 2)*/);
-			this.setText(nombreAlumno);
-			seleccionable=true;
-			selecionado=false;
-			Border borde=BorderFactory.createLineBorder(Color.BLACK, 1);
-			this.setBorder(borde);
-			this.setBackground(Color.ORANGE);
-			click_raton = new MouseListener() {
-				public void mouseClicked(MouseEvent e) {cambiarSeleccion();}
-				public void mousePressed(MouseEvent e) {}
-				public void mouseReleased(MouseEvent e) {}
-				public void mouseEntered(MouseEvent e) {}
-				public void mouseExited(MouseEvent e) {}
-			};
-
-			this.addMouseListener(click_raton);
-		}
-
-		/*===================== METODOS ===========================*/	
-		public void cambiarSeleccion() {
-			selecionado=Boolean.logicalXor(selecionado,true);
-
-			if(seleccionable==true) {
-				if(selecionado==true) {this.setBackground(Color.BLUE);}
-				else {this.setBackground(null);}
-			}
-		}
-		
-		public Boolean isSelecionado() {return selecionado;}
-		public String getiDAlumno() {return iDAlumno;}
-	}
-
-	/*=========================================================*/
-
 	/*===================== METODOS ===========================*/
 	//----------------------------------------------------------------------------//
-	public ArrayList<String> devuelveSelecionSesion() {
-		for(EtiquetaSesion e : etiquetasSesiones.values()) {
-			if(e.isSelecionado()) {
-				etiqSesiSeleccionadas.add(e.getiDsesion());
-			}
-		}
-		return etiqSesiSeleccionadas;
-	}	
+	public List<String> devuelveSelecionSesion() {return etiqSesiSeleccionadas;}	
 
 	public void quitaSeleccionSesion() {
 		for(EtiquetaSesion e : etiquetasSesiones.values()) {
@@ -226,46 +96,192 @@ public class Horario extends JPanel{
 		}
 	}
 	//----------------------------------------------------------------------------//
-	public List<String> devuelveSelecionAlumno() {
-		for(EtiquetaAlumno e : etiquetasAlumnos.values()) {
-			if(e.isSelecionado()) {
-				etiqAlumSeleccionadas.add(e.getiDAlumno());
-			}
-		}
-		System.out.println("Los Alumnos selecionados son: " + etiqAlumSeleccionadas);
-		return etiqAlumSeleccionadas;
-	}
+	public List<String> devuelveSelecionAlumno() {return etiqAlumSeleccionadas;}
 
 	public void quitaSeleccionAlumno() {
-		for(EtiquetaAlumno e : etiquetasAlumnos.values()) {
+		for(EtiquetaUsuario e : etiquetasAlumnos.values()) {
 			e.cambiarSeleccion();
 			etiqAlumSeleccionadas.clear();
 		}
 	}
 	//----------------------------------------------------------------------------//
-	public void insertarSesion(String ID, DayOfWeek dia, Time inicio, Time fin) {
-		EtiquetaSesion eS= new EtiquetaSesion(ID,dia,inicio, fin);
-		/** //Si se inserta una sesion, se redefinen las demas existentes
+	/**
+	 * <h2><i> insertarFranjaHoraria </i></h2>
+	 * <p><code> public void insertarFranjaHoraria(String idSesion, DayOfWeek dia, Time inicio, Time fin)</code></p>
+	 * <p>Inserta una sesion en el horario</p>
+	 * @param idSesion - identificador de la sesion
+	 * @param dia - dia de la semana
+	 * @param inicio - hora de inicio de la sesion
+	 * @param fin - hora de terminacion de la sesion
+	 */
+	public void insertarFranjaHoraria(String idSesion, DayOfWeek dia, Time inicio, Time fin) {
+		EtiquetaSesion eS= new EtiquetaSesion(idSesion,dia,inicio, fin);
+		etiquetasSesiones.put(idSesion,eS);
+		dias.get(dia).add(eS);
+		/*//Si se inserta una sesion, se redefinen las demas existentes
 		for(EtiquetaSesion es : etiquetasSesiones.values()) {
 			es.define();
-		}**/
-		etiquetasSesiones.put(ID,eS);
-		dias.get(dia).add(eS);
-		eS.add(new JLabel("Eii"));
+		}*/
+	}
+
+	/**
+	 * <h2><i> insertarUsuario </i></h2>
+	 * <p><code> public void insertarUsuario(String idUsuario, String nombre, String idSesion)</code></p>
+	 * <p>Inserta un alumno en el horario en una sesión concreta</p>
+	 * @param idUsuario - identificador del alumno y la etiqueta del mismo
+	 * @param nombre - cadena de caracteres que se escribiran en la correspondiente etiqueta del alumno
+	 * @param idSesion - identificador de la sesion en la que se introduce la etiqueta del alumno
+	 */
+	public void insertarUsuario(String idUsuario, String nombre, String idSesion) {
+		EtiquetaUsuario eA= new EtiquetaUsuario(idUsuario,nombre);
+		EtiquetaSesion eS = etiquetasSesiones.get(idSesion);
+		etiquetasAlumnos.put(idUsuario, eA);
+		eS.add(eA);
+		Graphics g = eS.getComponent(0).getGraphics();System.out.println(g);
+		eA.update(g);
+		eS.repaint();eS.revalidate();
+		/*for(EtiquetaSesion es : etiquetasSesiones.values()) {
+			es.define();
+		}*/
 	}
 	
-	/**
-	 * <h2><i> insertarAlumno </i></h2>
-	 * <p><code> public void insertarAlumno(String IDAlumno, String nombre, String IDSesion)</code></p>
-	 * <p>Inserta un alumno en el horario en una sesión concreta</p>
-	 * @param IDAlumno - identificador del alumno y la etiqueta del mismo
-	 * @param nombre - cadena de caracteres que se escribiran en la correspondiente etiqueta del alumno
-	 * @param IDSesion - identificador de la sesion en la que se introduce la etiqueta del alumno
-	 */
-	public void insertarAlumno(String IDAlumno, String nombre, String IDSesion) {
-		EtiquetaAlumno eA= new EtiquetaAlumno(IDAlumno,nombre);
-		etiquetasSesiones.get(IDSesion).add(eA);
-		etiquetasAlumnos.put(IDAlumno, eA);
+	
+
+	//==============================================
+	//=========== CLASES INTERNAS ==================
+	//==============================================
+	protected class EtiquetaUsuario extends JLabel{
+		private String iDUsuario;
+		private Boolean seleccionable;
+		private Boolean seleccionado;
+		private MouseListener click_raton;
+
+		public EtiquetaUsuario(String iDUsuario, String nombre) {
+			super(nombre);
+			super.setName(iDUsuario);
+			this.iDUsuario=iDUsuario;
+			seleccionable=true;
+			seleccionado=false;
+			
+			Border borde=BorderFactory.createLineBorder(Color.BLACK, 3);
+			this.setBorder(borde);
+
+			click_raton = new MouseListener() {
+				public void mouseClicked(MouseEvent e) {
+					cambiarSeleccion();
+					autoInsercionList();
+					}
+				public void mousePressed(MouseEvent e) {}
+				public void mouseReleased(MouseEvent e) {}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+			};
+
+			super.setPreferredSize(new Dimension(20,10));
+			this.addMouseListener(click_raton);
+		}
+
+		public Boolean isSelecionado() {return seleccionado;}
+		public String getiDAlumno() {return iDUsuario;}
+		public void cambiarSeleccion() {
+			seleccionado=Boolean.logicalXor(seleccionado,true);
+
+			if(seleccionable) {
+				if(seleccionado) {this.setBackground(Color.BLUE);}
+				else {this.setBackground(null);}
+			}
+		}
+		private void autoInsercionList() {
+			if(seleccionado) etiqAlumSeleccionadas.add(iDUsuario);
+			else etiqAlumSeleccionadas.remove(iDUsuario);
+		}
 	}
-	//----------------------------------------------------------------------------//
+
+
+	protected class EtiquetaSesion extends JPanel{
+		private String iDsesion; //Debe ser el mismo que el id de sesion correspondiente al objeto sesion (o entidad en BBDD)
+		private DayOfWeek dia;
+		private boolean seleccionable;
+		private boolean seleccionado;
+		private MouseListener click_raton;
+
+		private int posicionAbsolutaInicio;
+		private int posicionAbsolutaFin;
+
+		public EtiquetaSesion(String iDSesion,DayOfWeek dia, Time inicio, Time fin) {
+			super();
+			super.setName(iDSesion);
+			this.dia=dia;
+			/*======= ASPECTO de Etiqueta =======*/
+			// Colores
+			super.setBackground(Color.white);
+			BoxLayout b =new BoxLayout(this,BoxLayout.Y_AXIS);
+			super.setLayout(b);
+			// Tamanos
+			posicionAbsolutaInicio=inicio.getHours()*60+inicio.getMinutes();
+			posicionAbsolutaFin=fin.getHours()*60+fin.getMinutes();
+			define();
+			/*----------------------------------*/
+			seleccionable=true;
+			seleccionado=false;
+
+			this.iDsesion = iDSesion;
+			Border borde=BorderFactory.createLineBorder(Color.BLACK, 1);
+			super.setBorder(borde);
+
+			click_raton = new MouseListener() {
+				public void mouseClicked(MouseEvent e) {
+					cambiarSeleccion();
+					autoInsercionList();
+				}
+				public void mousePressed(MouseEvent e) {}
+				public void mouseReleased(MouseEvent e) {}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+			};
+
+			super.addMouseListener(click_raton);
+			// Comprobacion de que acepta Etiquetas alumnos
+			EtiquetaUsuario u=new EtiquetaUsuario("00000", "Prueba");
+			this.add(u);//TODO eliminar caso prueba		
+			//System.out.println("Aspecto EtiquetaUsuario :"+u.);
+		}
+		
+		private void autoInsercionList() {
+			if(seleccionado) etiqAlumSeleccionadas.add(iDsesion);
+			else etiqAlumSeleccionadas.remove(iDsesion);
+		}
+		public Boolean isSelecionado() {return seleccionado;}
+		public String getiDsesion() {return iDsesion;}
+		public void cambiarSeleccion() {
+			seleccionado=Boolean.logicalXor(seleccionado,true);
+			if(seleccionable) {
+				if(seleccionado) {this.setBackground(Color.GREEN);}
+				else {this.setBackground(null);}
+			}
+		}
+		/**
+		 * <h2><i> define </i></h2>
+		 * <p><code>public void define()</code></p>
+		 * <p>Redimensiona el tamaño de las sesiones en función de todas las introducidas hasta el momento</p>
+		 */
+		public void define() {
+			if(posicionAbsolutaInicio<time_min) time_min=posicionAbsolutaInicio;
+			int posicionRelativaInicio=posicionAbsolutaInicio-time_min;
+
+			if(posicionAbsolutaFin<time_min) time_min=posicionAbsolutaFin;
+			int posicionRelativaFin=posicionAbsolutaFin-time_min;
+
+			int denominador=posicionAbsolutaFin-posicionAbsolutaInicio;
+			if(denominador>0) {
+				int tasa = this.getHeight()/denominador;
+				if(tasa>alto_tiempo)alto_tiempo=tasa;
+				double altura = alto_tiempo*denominador;
+
+				this.setBounds(0, posicionRelativaInicio, dimHorario.width/numDias, (int) Math.round(altura));
+				//TODO revisar tamano (ancho) etiquetas
+				this.repaint();
+			}
+		}
+	}
 }
