@@ -32,8 +32,9 @@ public class HorarioEspecifico extends Horario implements OyenteEventos{
 			Alumno a = (Alumno)  r_Alumno.getActuales().get(((Alumno_Sesion) as).getClaveAlumno());
 			this.insertarAlumno(a, ((Alumno_Sesion) as).getClaveSesion());
 		}
-		this.revalidate();
-		this.repaint();
+		creaSemana();
+		//this.revalidate();
+		//this.repaint();
 	}
 
 	/**

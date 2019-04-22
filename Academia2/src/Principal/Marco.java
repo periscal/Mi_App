@@ -78,8 +78,7 @@ public class Marco{
 			registros.add(new Boton(r.getClaseAsociada().getSimpleName(), r, null));
 		}
 		 **/
-		//Horario Principal
-		horarioGeneral    = new HorarioEspecifico();
+		
 		//Instanciacion GUIs
 		FormularioGeneral f_Persona  = new FormularioGeneral(Persona.class);
 		FormularioGeneral f_Alumno 	 = new FormularioGeneral(Alumno.class);
@@ -118,6 +117,8 @@ public class Marco{
 		registros.add(gr_Sesion.botonGrupo("Sesion", null));
 		
 		//=========== Construccion Horario ==================
+		//Horario Principal
+		horarioGeneral    = new HorarioEspecifico();
 		horarioGeneral.construir();
 		/*//Insercion de todas las sesiones en el horario
 		for(TipoRegistrable s: r_Sesion.getActuales().values()) {horarioGeneral.insertarSesion((Sesion) s);}
