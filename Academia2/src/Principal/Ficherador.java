@@ -20,7 +20,7 @@ public interface Ficherador {
 				if(fis.available()!=0) { 
 					entrada=new ObjectInputStream(fis);			
 					objectoLeer= entrada.readObject();
-					System.out.println("Se ha logrado leer el fichero: "+ ruta);
+					//System.out.println("Se ha logrado leer el fichero: "+ ruta);
 				}else System.out.println("El fichero '"+ ruta+"' esta vacio");
 			}
 
@@ -41,41 +41,7 @@ public interface Ficherador {
 		
 		return objectoLeer;
 	}
-/*
-	public default void leer2(String ruta, Object objLector) {
-		FileInputStream fis = null;
-		ObjectInputStream entrada = null;
-		File datos=new File(ruta);
-		Object objectoLeer=null;
-		if(datos.exists()) {
-			try {
-				fis = new FileInputStream(ruta);
-				entrada=new ObjectInputStream(fis);			
-				objectoLeer= entrada.readObject();
-				if(objectoLeer!=null) {
-					objLector=objectoLeer;
-				System.out.println("Se ha logrado leer el fichero: "+ ruta);
-				}
-				//datos.createNewFile();
-				
-			}
 
-			catch (FileNotFoundException e1) {e1.printStackTrace();}
-			catch (IOException e) {	e.printStackTrace();}
-			catch (ClassNotFoundException e) {e.printStackTrace();}
-			finally {
-				try {
-					if (fis != null) {
-						fis.close();
-					}
-					if (entrada != null) {
-						entrada.close();
-					}
-				} catch (IOException e) {System.out.println(e.getMessage());}
-			}
-		}
-	}
-	*/
 	public default void escribir(String ruta, Object objetoEscribir) {
 		//Se inicializan las variables necesarias. Asi se podra hacer referencia si estan fuera del "try"
 		FileOutputStream fos = null;
@@ -90,7 +56,7 @@ public interface Ficherador {
 			salida = new ObjectOutputStream(fos);
 			//Se escribe el objeto en el fichero
 			salida.writeObject(objetoEscribir);
-			System.out.println("Se ha logrado escribir en fichero");
+			//System.out.println("Se ha logrado escribir en fichero");
 
 		} 
 		catch (FileNotFoundException e) {System.out.println("1. "+e.getMessage());}
@@ -101,7 +67,5 @@ public interface Ficherador {
 				if(salida!=null) {salida.close();System.out.println("Cerrado \n ----------------------------------");}
 			} catch (IOException e) {System.out.println("3. "+e.getMessage());}
 		}
-		//return;
-
 	}
 }

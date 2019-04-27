@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import GUI.GuiIF;
 import Registrables.TipoRegistrable;
@@ -22,16 +23,17 @@ public class Registrador extends GestorDatos <String, TipoRegistrable>{
 	public void nuevoRegistro(String iD){
 
 		try {
-			TipoRegistrable nuevoRegistro =  (TipoRegistrable) c.getConstructor().newInstance();
-
+			
 			List<HashMap<Field, Object>> l = ui.getAtributos(iD);
+			
 			for(HashMap<Field, Object> h:l) {
-				for(Field campoClase:h.keySet()) nuevoRegistro.setGeneral(campoClase, h.get(campoClase));
+				TipoRegistrable nuevoRegistro =  (TipoRegistrable) c.getConstructor().newInstance();
+				for(Map.Entry<Field, Object> entry:h.entrySet()) nuevoRegistro.setGeneral(entry.getKey(),entry.getValue());
 
 				nuevoRegistro.setiDprovisional(iD);
 				nuevoRegistro.setId(iD);
 				this.nuevoDato(iD, nuevoRegistro);
-				System.out.println("Se ha introducido nuevo Registro");
+				
 			}
 		} 
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {e.printStackTrace();

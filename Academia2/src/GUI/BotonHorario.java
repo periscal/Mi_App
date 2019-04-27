@@ -27,8 +27,7 @@ public class BotonHorario extends BotonAbreVentana implements GuiIF{
 			v.dispose();
 			}
 		};
-		v.aceptarCancelar.getAceptar().setAction(accionAceptar);
-		v.add(horario);
+		v.aceptarCancelar.accionAceptar(accionAceptar);
 	}
 
 	@Override
@@ -48,11 +47,12 @@ public class BotonHorario extends BotonAbreVentana implements GuiIF{
 		return a;
 	}
 
-	@Override
 	public Class<?> clase() {return clase;}
 	
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		horario.construir();
+		v.add(horario);
 		v.setVisible(true);
 	}
 }

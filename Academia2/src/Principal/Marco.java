@@ -1,10 +1,7 @@
 package Principal;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import BBDD.BBDDconcreta;
 import GUI.Aspecto;
 import GUI.BotonHorario;
@@ -13,10 +10,6 @@ import GUI.GrupoRegistradores;
 import GUI.HorarioEspecifico;
 import GUI.Pestanas;
 import Registrables.*;
-
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
@@ -28,7 +21,6 @@ public class Marco{
 	public static HashMap<Class<?>,Registrador> registradores;
 	static HashMap<Class<?>, GrupoRegistradores> grupos;
 	public static HorarioEspecifico horarioGeneral;
-
 
 	public static void main(String[] args){
 		//================== Ventana Principal =================//
@@ -92,10 +84,10 @@ public class Marco{
 		Registrador r_Sesion 		= new Registrador(Sesion.class,f_Sesion);			registradores.put(Sesion.class, r_Sesion);
 		Registrador r_AlumnoSesion	= new Registrador(Alumno_Sesion.class, b_Horario);	registradores.put(Alumno_Sesion.class, r_AlumnoSesion);
 		//Instanciacion GruposRegistradores
-		GrupoRegistradores gr_Persona				= new GrupoRegistradores();
-		GrupoRegistradores gr_PersonaAlumnoHorario  = new GrupoRegistradores(); 
-		GrupoRegistradores gr_PersonaProfesor 		= new GrupoRegistradores(); 
-		GrupoRegistradores gr_Sesion 		        = new GrupoRegistradores(); 
+		GrupoRegistradores gr_Persona				= new GrupoRegistradores("Persona", null);
+		GrupoRegistradores gr_PersonaAlumnoHorario  = new GrupoRegistradores("Alumno",null); 
+		GrupoRegistradores gr_PersonaProfesor 		= new GrupoRegistradores("Profesor", null); 
+		GrupoRegistradores gr_Sesion 		        = new GrupoRegistradores("Sesion", null); 
 		//Insertar  registradores
 		gr_PersonaAlumnoHorario.insertarReg(r_Persona);
 		gr_PersonaAlumnoHorario.insertarReg(r_Alumno);

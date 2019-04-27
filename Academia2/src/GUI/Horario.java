@@ -41,7 +41,7 @@ public class Horario extends Container{
 		/*----------------------------------*/
 
 		dias=new EnumMap<>(DayOfWeek.class);
-		System.out.println("* Dimensiones horario: "+dimHorario);
+		//System.out.println("* Dimensiones horario: "+dimHorario);
 	}
 
 	/*=============== METODOS =================*/
@@ -130,10 +130,9 @@ public class Horario extends Container{
 				public void mouseExited(MouseEvent e) {}
 			};
 			this.addMouseListener(clickRaton);
-			
 			Border borde=BorderFactory.createLineBorder(Color.BLACK, 3);
 			setBorder(borde);
-			setPreferredSize(new Dimension(60,20));
+			setPreferredSize(new Dimension(40,20));
 			setBackground(Color.ORANGE);
 		}
 
@@ -213,8 +212,8 @@ public class Horario extends Container{
 		}
 
 		private void autoInsercionList() {
-			if(seleccionado) EtiquetaUsuario.etiqAlumSeleccionadas.add(iDsesion);
-			else EtiquetaUsuario.etiqAlumSeleccionadas.remove(iDsesion);
+			if(seleccionado) EtiquetaSesion.etiqSesiSeleccionadas.add(iDsesion);
+			else EtiquetaSesion.etiqSesiSeleccionadas.remove(iDsesion);
 		}
 		public Boolean isSelecionado() {return seleccionado;}
 		public String getiDsesion() {return iDsesion;}

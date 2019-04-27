@@ -2,7 +2,6 @@ package GUI;
 
 import java.sql.Time;
 import java.time.DayOfWeek;
-import java.util.HashMap;
 import Eventos.MiObjectoEvento;
 import Eventos.OyenteEventos;
 import Principal.Marco;
@@ -73,7 +72,6 @@ public class HorarioEspecifico extends Horario implements OyenteEventos{
 		String idAlumno=alumno.getId();
 		String nombre = alumno.getNombre();
 		insertarUsuario(idAlumno,nombre,idSesion);
-		System.out.println("Se ha insertado alumno en horario");
 	}
 
 	@Override

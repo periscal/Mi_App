@@ -23,9 +23,6 @@ public class CajaAceptarCerrar extends Box{
 		aceptar = new JButton();
 		cancelar= new JButton();
 		
-		aceptar.setText("Aceptar");
-		cancelar.setText("Cerrar");
-
 		aceptar.setBackground(Color.GRAY);
 		cancelar.setBackground(Color.GRAY);
 
@@ -41,10 +38,16 @@ public class CajaAceptarCerrar extends Box{
 			System.out.println("Has pulsado el boton \"Cerrar\" del objeto 'CajaAcetparCerrar' y no tiene acción asignada");
 		}
 		cancelar.setAction(accionCancelar);
+		
+		aceptar.setText("Aceptar");
+		cancelar.setText("Cerrar");
+		
 		this.add(aceptar);
 		this.add(cancelar);
 	}
-
-	public JButton getCancelar() {return cancelar;}
-	public JButton getAceptar() {return aceptar;}
+	
+	public void accionAceptar(Action accionAceptar) {
+		aceptar.setAction(accionAceptar);
+		aceptar.setText("Aceptar");
+	}
 }

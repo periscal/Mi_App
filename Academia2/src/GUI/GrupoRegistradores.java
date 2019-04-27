@@ -17,14 +17,14 @@ public class GrupoRegistradores extends GuiFrame{
 	private HashMap<Class<?>,Registrador> regs;
 	private JButton botonGrupo;
 
-	public GrupoRegistradores(){
+	public GrupoRegistradores(String nombre,ImageIcon icono){
 		super();
 		regs = new HashMap<>();
 		botonGrupo = new JButton();
-
+		
 		//----------------- ACCION Boton ACEPTAR-------------------//
 		Action accionAceptar = new AbstractAction() {public void actionPerformed(ActionEvent e) {nuevosRegistros();}};
-		super.aceptarCancelar.getAceptar().setAction(accionAceptar);
+		super.aceptarCancelar.accionAceptar(accionAceptar);
 		//----------------------------------------------------------//
 	}
 
@@ -55,17 +55,17 @@ public class GrupoRegistradores extends GuiFrame{
 	}
 
 	public JButton botonGrupo(String nombre,ImageIcon icono) {
-		botonGrupo.setText(nombre);
 		//botonGrupo.setIcon(icono);
-		botonGrupo.setSize(50, 20);
-		//Aspecto.aplicarAspecto(botonGrupo);
+		Aspecto.aplicarAspecto(botonGrupo);
 		Action accionVisibilizar = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {visibilizar();}
 		};
+		//Necesariamente se debe fijar 1º la accion y despues el texto del boton
 		botonGrupo.setAction(accionVisibilizar);
+		botonGrupo.setText(nombre);
 		return botonGrupo;
 	}
-	
+	/*
 	public void setBotonGrupo(JButton boton) {
 		Action accionVisibilizar = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {visibilizar();}
@@ -73,5 +73,5 @@ public class GrupoRegistradores extends GuiFrame{
 		boton.setAction(accionVisibilizar);
 		this.botonGrupo=boton;
 	}
-	
+	*/
 }
